@@ -107,7 +107,13 @@ fn reflect_bind_group(
 fn reflect_dimension(type_description: &ReflectTypeDescription) -> TextureViewDimension {
     match type_description.traits.image.dim {
         ReflectDimension::Type1d => TextureViewDimension::D1,
-        ReflectDimension::Type2d => TextureViewDimension::D2,
+        ReflectDimension::Type2d => {
+            if type_description.traits.image.arrayed == 0 {
+                TextureViewDimension::D2
+            } else {
+                TextureViewDimension::D2Array
+            }
+        }
         ReflectDimension::Type3d => TextureViewDimension::D3,
         ReflectDimension::Cube => TextureViewDimension::Cube,
         dimension => panic!("Unsupported image dimension: {:?}.", dimension),
